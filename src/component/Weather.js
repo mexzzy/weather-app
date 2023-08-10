@@ -1,12 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
+// video background
 import video from "../images-videos/bg-video.mp4";
+import video_2 from "../images-videos/video-2.mp4";
+import video_3 from "../images-videos/video-3.mp4";
+import video_4 from "../images-videos/video-4.mp4";
+import video_5 from "../images-videos/video-5.mp4";
+import video_6 from "../images-videos/video-6.mp4";
+import video_7 from "../images-videos/video-7.mp4";
+import video_8 from "../images-videos/video-8.mp4";
+//
 import wind from "../images-videos/wind.png";
 import wave from "../images-videos/wave.png";
 //
-import sun from "../images-videos/sun.png";
 import cloud from "../images-videos/cloud.png";
+import sun from "../images-videos/sun.png";
 import drizzle from "../images-videos/drizzle.png";
 import mist from "../images-videos/mist.png";
 import rain from "../images-videos/rain.png";
@@ -18,41 +27,71 @@ const Weather = () => {
     name: "city",
     humidity: 0,
     speed: 0,
-    image: sunCloud,
-    title: clear,
+    image: sun,
+    title: "sunny",
   });
   const [name, setName] = useState("");
   const [error, setError] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+
+  const backgroundVideo = [video, video_2, video_3, video_4, video_5, video_6, video_7, video_8];
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentVideoIndex(
+        (prevIndex) => (prevIndex + 1) % backgroundVideo.length
+      );
+    }, 10000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [backgroundVideo.length]);
+
+  const clearInputHandle = () => {
+    setInputValue("");
+  };
+
+  const inputChange = (e) => {
+    setName(e.target.value);
+    setInputValue(e.target.value);
+  };
+  const handleOnKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleClick();
+    }
+  };
 
   const handleClick = () => {
+    if (name === "") {
+      setError("City is empty");
+    }
     if (name !== "") {
       const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=3215f5c33ff488b9bb2cd36919c58aaf&&units=metric`;
       axios
-      .get(apiUrl)
-      .then((res) => {
-        let imagePath = "";
-        let weatherTitle = "";
-        if (res.data.weather[0].main === "Cloud") {
-          imagePath = cloud;
-          weatherTitle = "Cloudy";
-        } else if (res.data.weather[0].main === "Clear") {
-          imagePath = sunCloud;
-          weatherTitle = "Clear";
-        } else if (res.data.weather[0].main === "Rain") {
-          imagePath = rain;
-          weatherTitle = "Rainy";
-        } else if (res.data.weather[0].main === "Drizzle") {
-          imagePath = drizzle;
-          weatherTitle = "Drizzle";
-        } else if (res.data.weather[0].main === "Mist") {
-          imagePath = mist;
-          weatherTitle = "Mist";
-        } else {
-          imagePath = sun;
-          weatherTitle = "Sunny";
-        }
-        console.log(res.data)
-        setData({
+        .get(apiUrl)
+        .then((res) => {
+          let imagePath = "";
+          let weatherTitle = "";
+          if (res.data.weather[0].main === "Cloud") {
+            imagePath = cloud;
+            weatherTitle = "Cloudy";
+          } else if (res.data.weather[0].main === "Clear") {
+            imagePath = sunCloud;
+            weatherTitle = "Clear";
+          } else if (res.data.weather[0].main === "Rain") {
+            imagePath = rain;
+            weatherTitle = "Rainy";
+          } else if (res.data.weather[0].main === "Drizzle") {
+            imagePath = drizzle;
+            weatherTitle = "Drizzle";
+          } else if (res.data.weather[0].main === "Mist") {
+            imagePath = mist;
+            weatherTitle = "Mist";
+          } else {
+            imagePath = sunCloud;
+            weatherTitle = "clear";
+          }
+          setData({
             ...data,
             celsius: res.data.main.temp,
             name: res.data.name,
@@ -61,15 +100,14 @@ const Weather = () => {
             image: imagePath,
             title: weatherTitle,
           });
-          setError("")
+          setError("");
         })
         .catch((err) => {
-          if(err.response.status === 404){
-            setError("City not Found")
-          }else{
-            setError("")
+          if (err.response.status === 404) {
+            setError("City not Found");
+          } else {
+            setError("");
           }
-          console.log(err)
         });
     }
   };
@@ -77,7 +115,7 @@ const Weather = () => {
     <>
       <Main>
         <Overlay></Overlay>
-        <Videos src={video} autoPlay loop muted />
+        <Videos src={backgroundVideo[currentVideoIndex]} autoPlay loop muted />
         <ContentWrapper>
           <h1 style={{ color: "#fff", textAlign: "center", marginTop: "10px" }}>
             Weather Update
@@ -87,8 +125,15 @@ const Weather = () => {
               <input
                 type="text"
                 placeholder="Enter City"
-                onChange={(e) => setName(e.target.value)}
+                value={inputValue}
+                onChange={inputChange}
+                onKeyPress={handleOnKeyPress}
               />
+              {inputValue && (
+                <Clear onClick={clearInputHandle}>
+                  <i className="fi fi-br-cross-small"></i>
+                </Clear>
+              )}
               <div onClick={handleClick}>
                 <i className="fi fi-rr-search"></i>
                 <span>Search</span>
@@ -98,7 +143,7 @@ const Weather = () => {
           <Error>{error}</Error>
           <MainTempDisplay>
             <div>
-            <p>{data.title}</p>
+              <p>{data.title}</p>
               <Images src={data.image} alt="weather" />
             </div>
             <div>
@@ -126,6 +171,11 @@ const Weather = () => {
               </div>
             </Wind>
           </HumidityAndWind>
+          <Footer>
+            <div>
+              <div>MeTech</div>|<div>Weather Update &copy; 2023 copyright</div>
+            </div>
+          </Footer>
         </ContentWrapper>
       </Main>
     </>
@@ -164,7 +214,7 @@ const SearchBar = styled.div`
     background: #fff;
     border-radius: 10px;
     width: auto;
-    gap: 10px;
+    gap: 5px;
     @media (max-width: 768px) {
       width: 80%;
     }
@@ -180,10 +230,11 @@ const SearchBar = styled.div`
         width: 100%;
       }
     }
+
     div {
-      background: red;
+      background: rgba(0, 123, 255, 0.881);
       padding: 10px;
-      flex: 1;
+      width: fit-content;
       border-radius: 10px;
       display: flex;
       cursor: pointer;
@@ -196,6 +247,12 @@ const SearchBar = styled.div`
       }
     }
   }
+`;
+const Clear = styled.span`
+  border-radius: 50%;
+  padding: 5px 5px 3px 5px;
+  background-color: rgba(255, 0, 0, 0.662);
+  color: white;
 `;
 const Overlay = styled.div`
   position: absolute;
@@ -213,6 +270,21 @@ const MainTempDisplay = styled.div`
   margin: 2% 0;
   @media (max-width: 768px) {
     margin: 10% 0;
+  }
+  div:nth-child(1) {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+    p {
+      background-color: #ffffff33;
+      padding: 5px 10px;
+      border-radius: 5px;
+      text-transform: capitalize;
+      font-weight: bold;
+      color: #fff;
+    }
   }
   div:nth-child(2) {
     color: #fff;
@@ -255,7 +327,6 @@ const Humidity = styled.div`
     display: flex;
     flex-direction: column;
     gap: 5px;
-    /* color: white; */
 
     span:nth-child(1) {
       font-weight: bold;
@@ -271,7 +342,7 @@ const Wind = styled.div`
   align-items: center;
   gap: 10px;
   padding: 10px;
-  border: 2px solid red;
+  border: 2px solid rgba(0, 123, 255, 0.881);
   background: #fff;
   border-radius: 10px;
   width: fit-content;
@@ -284,8 +355,6 @@ const Wind = styled.div`
     display: flex;
     flex-direction: column;
     gap: 5px;
-    /* color: white; */
-
     span:nth-child(1) {
       font-weight: bold;
       font-size: 20px;
@@ -302,4 +371,22 @@ const Error = styled.div`
   align-items: center;
   justify-content: center;
   font-weight: bold;
-`
+`;
+const Footer = styled.div`
+  width: 100%;
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  padding: 20px 0;
+  margin-top: 2%;
+  justify-content: center;
+  @media (max-width: 768px) {
+    margin-top: 10%;
+  }
+  div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+  }
+`;

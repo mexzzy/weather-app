@@ -7,7 +7,7 @@ const UserIpLocation = () => {
       try {
         const response = await axios.get("https://ipinfo.io/json", {
           headers: {
-            Authorization: 'Bearer bed0bd29141b6e',
+            Authorization: "Bearer bed0bd29141b6e",
           },
         });
         console.log("Fetched IP Data:", response.data);
@@ -21,7 +21,7 @@ const UserIpLocation = () => {
 
   return (
     <>
-      <div></div>
+      <div>{/* jet */}</div>
     </>
   );
 };

@@ -1,8 +1,27 @@
+@import url('https://fonts.cdnfonts.com/s/37060/Digital.woff');
+
 *{
   margin: 0;
   padding: 0;
 }
 body{
-
 background: #474747;
+
+}
+
+.loader{
+
+  background: transparent;
+  border-radius: 50%;
+  padding: 10px;
+  animation: loader 1s linear infinite;
+  border-left: 3px solid #ccc;
+}
+@keyframes loader {
+  0%{
+    transform: rotate(0deg)
+  }
+  100%{
+    transform: rotate(360deg)
+  }
 }

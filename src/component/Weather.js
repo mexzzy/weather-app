@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+// axios
 import axios from "axios";
+// styled component
 import styled from "styled-components";
 // video background
 import video from "../images-videos/bg-video.mp4";
@@ -21,6 +23,12 @@ import mist from "../images-videos/mist.png";
 import rain from "../images-videos/rain.png";
 import sunCloud from "../images-videos/sun-cloud.png";
 import Clock from "./Clock";
+// react icons
+import { BiSearch } from "react-icons/bi";
+// loader animation 
+// import UseAnimations from 'react-useanimations';
+// EVERY ANIMATION NEEDS TO BE IMPORTED FIRST -> YOUR BUNDLE WILL INCLUDE ONLY WHAT IT NEEDS
+// import github from 'react-useanimations/lib/github'
 
 const Weather = () => {
   const [data, setData] = useState({
@@ -35,8 +43,18 @@ const Weather = () => {
   const [error, setError] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const backgroundVideo = [video, video_2, video_3, video_4, video_5, video_6, video_7, video_8];
+  const backgroundVideo = [
+    video,
+    video_2,
+    video_3,
+    video_4,
+    video_5,
+    video_6,
+    video_7,
+    video_8,
+  ];
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentVideoIndex(
@@ -68,6 +86,7 @@ const Weather = () => {
     }
     if (name !== "") {
       const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=3215f5c33ff488b9bb2cd36919c58aaf&&units=metric`;
+      setIsLoading(true);
       axios
         .get(apiUrl)
         .then((res) => {
@@ -101,9 +120,11 @@ const Weather = () => {
             image: imagePath,
             title: weatherTitle,
           });
-          setError("");
+          setIsLoading(false);
+          // setError("");
         })
         .catch((err) => {
+          // setIsLoading(false);
           if (err.response.status === 404) {
             setError("City not Found");
           } else {
@@ -118,10 +139,8 @@ const Weather = () => {
         <Overlay></Overlay>
         <Videos src={backgroundVideo[currentVideoIndex]} autoPlay loop muted />
         <ContentWrapper>
-          <h1 style={{ color: "#fff", textAlign: "center", marginTop: "10px" }}>
-            Weather Update
-          </h1>
-          < Clock/>
+          <AppName>Weather Update</AppName>
+          <Clock />
           <SearchBar>
             <div>
               <input
@@ -137,8 +156,17 @@ const Weather = () => {
                 </Clear>
               )}
               <div onClick={handleClick}>
-                <i className="fi fi-rr-search"></i>
-                <span>Search</span>
+                {isLoading ? (
+                  <LoadingContainer>
+                    <div className="loader"></div>
+                    <span> loading...</span>
+                  </LoadingContainer>
+                ) : (
+                  <>
+                    <BiSearch />
+                    <span>Search</span>
+                  </>
+                )}
               </div>
             </div>
           </SearchBar>
@@ -186,6 +214,12 @@ const Weather = () => {
 
 export default Weather;
 
+const AppName = styled.div`
+  font-family: "Righteous", cursive;
+  color: white;
+  text-align: center;
+  font-size: 35px;
+`;
 const Main = styled.div`
   width: 100%;
   height: 100vh;
@@ -255,6 +289,12 @@ const Clear = styled.span`
   padding: 5px 5px 3px 5px;
   background-color: rgba(255, 0, 0, 0.662);
   color: white;
+`;
+
+const LoadingContainer = styled.span`
+  display: flex;
+  align-items: center;
+  gap: 10px;
 `;
 const Overlay = styled.div`
   position: absolute;
@@ -387,7 +427,7 @@ const Footer = styled.div`
   /* color: #474747; */
   justify-content: center;
   @media (max-width: 768px) {
-  backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     margin-top: 10%;
   }
   div {

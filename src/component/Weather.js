@@ -20,6 +20,7 @@ import drizzle from "../images-videos/drizzle.png";
 import mist from "../images-videos/mist.png";
 import rain from "../images-videos/rain.png";
 import sunCloud from "../images-videos/sun-cloud.png";
+import Clock from "./Clock";
 
 const Weather = () => {
   const [data, setData] = useState({
@@ -77,7 +78,7 @@ const Weather = () => {
             weatherTitle = "Cloudy";
           } else if (res.data.weather[0].main === "Clear") {
             imagePath = sunCloud;
-            weatherTitle = "Clear";
+            weatherTitle = "mostly cloudy";
           } else if (res.data.weather[0].main === "Rain") {
             imagePath = rain;
             weatherTitle = "Rainy";
@@ -120,6 +121,7 @@ const Weather = () => {
           <h1 style={{ color: "#fff", textAlign: "center", marginTop: "10px" }}>
             Weather Update
           </h1>
+          < Clock/>
           <SearchBar>
             <div>
               <input
@@ -321,6 +323,8 @@ const Humidity = styled.div`
   div:nth-child(1) {
     img {
       width: 50px;
+      height: 50px;
+      object-fit: cover;
     }
   }
   div:nth-child(2) {
@@ -349,6 +353,8 @@ const Wind = styled.div`
   div:nth-child(1) {
     img {
       width: 50px;
+      height: 50px;
+      object-fit: cover;
     }
   }
   div:nth-child(2) {
@@ -374,13 +380,14 @@ const Error = styled.div`
 `;
 const Footer = styled.div`
   width: 100%;
-  backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   padding: 20px 0;
   margin-top: 2%;
+  /* color: #474747; */
   justify-content: center;
   @media (max-width: 768px) {
+  backdrop-filter: blur(10px);
     margin-top: 10%;
   }
   div {

@@ -21,6 +21,7 @@ import mist from "../images-videos/mist.png";
 import rain from "../images-videos/rain.png";
 import sunCloud from "../images-videos/sun-cloud.png";
 import Clock from "./Clock";
+import UserIpLocation from "./IpLocation";
 
 const Weather = () => {
   const [data, setData] = useState({
@@ -36,7 +37,16 @@ const Weather = () => {
   const [inputValue, setInputValue] = useState("");
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
-  const backgroundVideo = [video, video_2, video_3, video_4, video_5, video_6, video_7, video_8];
+  const backgroundVideo = [
+    video,
+    video_2,
+    video_3,
+    video_4,
+    video_5,
+    video_6,
+    video_7,
+    video_8,
+  ];
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentVideoIndex(
@@ -112,6 +122,7 @@ const Weather = () => {
         });
     }
   };
+
   return (
     <>
       <Main>
@@ -121,7 +132,7 @@ const Weather = () => {
           <h1 style={{ color: "#fff", textAlign: "center", marginTop: "10px" }}>
             Weather Update
           </h1>
-          < Clock/>
+          <Clock />
           <SearchBar>
             <div>
               <input
@@ -180,6 +191,7 @@ const Weather = () => {
           </Footer>
         </ContentWrapper>
       </Main>
+      <UserIpLocation />
     </>
   );
 };
@@ -387,7 +399,7 @@ const Footer = styled.div`
   /* color: #474747; */
   justify-content: center;
   @media (max-width: 768px) {
-  backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     margin-top: 10%;
   }
   div {

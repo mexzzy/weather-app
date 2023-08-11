@@ -22,4 +22,5 @@ const Time = styled.h2`
     margin: 5px 0;
     padding: 0.2em;
     text-align: center;
+    width: fit-content;
 `

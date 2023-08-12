@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+// axios
 import axios from "axios";
+// styled component
 import styled from "styled-components";
 // video background
 
@@ -14,6 +16,11 @@ import mist from "../images-videos/mist.png";
 import rain from "../images-videos/rain.png";
 import sunCloud from "../images-videos/sun-cloud.png";
 import Clock from "./Clock";
+// react icons
+import { BiSearch } from "react-icons/bi";
+import { X } from "react-feather";
+// loader animation
+import {ClipLoader} from "react-spinners/ClipLoader";
 import UserIpLocation from "./IpLocation";
 
 const Weather = () => {
@@ -29,18 +36,18 @@ const Weather = () => {
   const [error, setError] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const backgroundVideo = [
-    'https://vod-progressive.akamaized.net/exp=1691859234~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F2945%2F12%2F314728144%2F1214767347.mp4~hmac=5121e7406498dd5e6c6171be71fa36c3bec97f23f865272e554f76772d2727ea/vimeo-prod-skyfire-std-us/01/2945/12/314728144/1214767347.mp4?download=1&filename=pexels_videos_1860175+%282160p%29.mp4',
-    'https://vod-progressive.akamaized.net/exp=1691859460~acl=%2Fvimeo-transcode-storage-prod-us-central1-h264-2160p%2F01%2F3641%2F14%2F368208181%2F1523391695.mp4~hmac=7bce166e35cb669734fd48be1a7130098fbb6f40f15fa1082eb740a08c1e4fa7/vimeo-transcode-storage-prod-us-central1-h264-2160p/01/3641/14/368208181/1523391695.mp4?download=1&filename=video+%282160p%29.mp4',
-    'https://vod-progressive.akamaized.net/exp=1691859551~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F1132%2F8%2F205660426%2F700244882.mp4~hmac=6e71c86105fdb25630a60487dc45ed75d4479dab9e590a5b677bdc5831ecc6c0/vimeo-prod-skyfire-std-us/01/1132/8/205660426/700244882.mp4?download=1&filename=woman_waiting_for_a_taxi+%281080p%29.mp4',
-    'https://vod-progressive.akamaized.net/exp=1691859601~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F1041%2F12%2F305209130%2F1170417074.mp4~hmac=73f764d8ef49a91a0ca1618544d6205a1d73813f10baf532291b17097de11530/vimeo-prod-skyfire-std-us/01/1041/12/305209130/1170417074.mp4?download=1&filename=pexels_videos_1672733+%281080p%29.mp4',
-    'https://vod-progressive.akamaized.net/exp=1691860682~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F2148%2F8%2F210741446%2F722728905.mp4~hmac=fe965cb1845e83c052955d4fbf977ad534c5137ef43fd4188769fd8e3ca2ad6b/vimeo-prod-skyfire-std-us/01/2148/8/210741446/722728905.mp4?download=1&filename=pexels_videos_2614+%281080p%29.mp4',
-    'https://vod-progressive.akamaized.net/exp=1691860748~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F2276%2F17%2F436382563%2F1902919897.mp4~hmac=03934e9345be9101527b062725bbce7aacd7282f6f7de958860ff5f905c556d6/vimeo-prod-skyfire-std-us/01/2276/17/436382563/1902919897.mp4?download=1&filename=production_id%3A4828773+%281080p%29.mp4',
-    'https://vod-progressive.akamaized.net/exp=1691860825~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F2524%2F15%2F387620496%2F1634957389.mp4~hmac=863cc5a2d1acaee9181941cf81f5e5786f20f8bd4d033740329550afcba847bc/vimeo-prod-skyfire-std-us/01/2524/15/387620496/1634957389.mp4?download=1&filename=video+%281080p%29.mp4',
-    'https://vod-progressive.akamaized.net/exp=1691860895~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F3178%2F17%2F440893234%2F1928104199.mp4~hmac=30a7b30adb7d4a44bd50a354e49121e05ee6dd02fcbb9077111e97572ce78c34/vimeo-prod-skyfire-std-us/01/3178/17/440893234/1928104199.mp4?download=1&filename=production_id%3A4933583+%28720p%29.mp4',
-    'https://vod-progressive.akamaized.net/exp=1691861071~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F4386%2F15%2F396931411%2F1689144204.mp4~hmac=f481839f19375b5bb488d42fc41435bfcdb76a08aac1a852c70269dbb453c81c/vimeo-prod-skyfire-std-us/01/4386/15/396931411/1689144204.mp4?download=1&filename=production_id%3A3913495+%281080p%29.mp4',
-    ''    
+    // "https://vod-progressive.akamaized.net/exp=1691859234~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F2945%2F12%2F314728144%2F1214767347.mp4~hmac=5121e7406498dd5e6c6171be71fa36c3bec97f23f865272e554f76772d2727ea/vimeo-prod-skyfire-std-us/01/2945/12/314728144/1214767347.mp4?download=1&filename=pexels_videos_1860175+%282160p%29.mp4",
+    // "https://vod-progressive.akamaized.net/exp=1691859460~acl=%2Fvimeo-transcode-storage-prod-us-central1-h264-2160p%2F01%2F3641%2F14%2F368208181%2F1523391695.mp4~hmac=7bce166e35cb669734fd48be1a7130098fbb6f40f15fa1082eb740a08c1e4fa7/vimeo-transcode-storage-prod-us-central1-h264-2160p/01/3641/14/368208181/1523391695.mp4?download=1&filename=video+%282160p%29.mp4",
+    // "https://vod-progressive.akamaized.net/exp=1691859551~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F1132%2F8%2F205660426%2F700244882.mp4~hmac=6e71c86105fdb25630a60487dc45ed75d4479dab9e590a5b677bdc5831ecc6c0/vimeo-prod-skyfire-std-us/01/1132/8/205660426/700244882.mp4?download=1&filename=woman_waiting_for_a_taxi+%281080p%29.mp4",
+    "https://vod-progressive.akamaized.net/exp=1691859601~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F1041%2F12%2F305209130%2F1170417074.mp4~hmac=73f764d8ef49a91a0ca1618544d6205a1d73813f10baf532291b17097de11530/vimeo-prod-skyfire-std-us/01/1041/12/305209130/1170417074.mp4?download=1&filename=pexels_videos_1672733+%281080p%29.mp4",
+    // "https://vod-progressive.akamaized.net/exp=1691860682~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F2148%2F8%2F210741446%2F722728905.mp4~hmac=fe965cb1845e83c052955d4fbf977ad534c5137ef43fd4188769fd8e3ca2ad6b/vimeo-prod-skyfire-std-us/01/2148/8/210741446/722728905.mp4?download=1&filename=pexels_videos_2614+%281080p%29.mp4",
+    // "https://vod-progressive.akamaized.net/exp=1691860748~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F2276%2F17%2F436382563%2F1902919897.mp4~hmac=03934e9345be9101527b062725bbce7aacd7282f6f7de958860ff5f905c556d6/vimeo-prod-skyfire-std-us/01/2276/17/436382563/1902919897.mp4?download=1&filename=production_id%3A4828773+%281080p%29.mp4",
+    // "https://vod-progressive.akamaized.net/exp=1691860825~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F2524%2F15%2F387620496%2F1634957389.mp4~hmac=863cc5a2d1acaee9181941cf81f5e5786f20f8bd4d033740329550afcba847bc/vimeo-prod-skyfire-std-us/01/2524/15/387620496/1634957389.mp4?download=1&filename=video+%281080p%29.mp4",
+    // "https://vod-progressive.akamaized.net/exp=1691860895~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F3178%2F17%2F440893234%2F1928104199.mp4~hmac=30a7b30adb7d4a44bd50a354e49121e05ee6dd02fcbb9077111e97572ce78c34/vimeo-prod-skyfire-std-us/01/3178/17/440893234/1928104199.mp4?download=1&filename=production_id%3A4933583+%28720p%29.mp4",
+    // "https://vod-progressive.akamaized.net/exp=1691861071~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F4386%2F15%2F396931411%2F1689144204.mp4~hmac=f481839f19375b5bb488d42fc41435bfcdb76a08aac1a852c70269dbb453c81c/vimeo-prod-skyfire-std-us/01/4386/15/396931411/1689144204.mp4?download=1&filename=production_id%3A3913495+%281080p%29.mp4",
   ];
   useEffect(() => {
     const interval = setInterval(() => {
@@ -73,6 +80,7 @@ const Weather = () => {
     }
     if (name !== "") {
       const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=3215f5c33ff488b9bb2cd36919c58aaf&&units=metric`;
+      setIsLoading(true);
       axios
         .get(apiUrl)
         .then((res) => {
@@ -106,6 +114,7 @@ const Weather = () => {
             image: imagePath,
             title: weatherTitle,
           });
+          setIsLoading(false);
           setError("");
         })
         .catch((err) => {
@@ -124,48 +133,80 @@ const Weather = () => {
         <Overlay></Overlay>
         <Videos src={backgroundVideo[currentVideoIndex]} autoPlay loop muted />
         <ContentWrapper>
-          <h1 style={{ color: "#fff", textAlign: "center", marginTop: "10px" }}>
-            Weather Update
-          </h1>
-          <Clock />
+          <Nav>
+            <AppName>Weather Update</AppName>
+            <Clock />
+          </Nav>
+
           <SearchBar>
             <div>
               <input
                 type="text"
-                placeholder="Enter City"
+                placeholder="Enter Country, State, City"
                 value={inputValue}
                 onChange={inputChange}
                 onKeyPress={handleOnKeyPress}
               />
               {inputValue && (
                 <Clear onClick={clearInputHandle}>
-                  <i className="fi fi-br-cross-small"></i>
+                  <X size="18" />
                 </Clear>
               )}
               <div onClick={handleClick}>
-                <i className="fi fi-rr-search"></i>
-                <span>Search</span>
+                {isLoading ? (
+                  <LoadingContainer>
+                    <ClipLoader
+                      size={10}
+                      color="white"
+                      aria-label="Loading Spinner"
+                    />
+                    <span>Loading...</span>
+                  </LoadingContainer>
+                ) : (
+                  <>
+                    <BiSearch />
+                    <span>Search</span>
+                  </>
+                )}
               </div>
             </div>
           </SearchBar>
           <Error>{error}</Error>
-          <MainTempDisplay>
-            <div>
-              <p>{data.title}</p>
-              <Images src={data.image} alt="weather" />
-            </div>
-            <div>
-              <h2>{Math.round(data.celsius)}°c</h2>
-            </div>
-            <div>{data.name}</div>
-          </MainTempDisplay>
+          {isLoading ? (
+            <CenterLoading>
+              <ClipLoader
+                size={150}
+                color="white"
+                aria-label="Loading Spinner"
+              />
+            </CenterLoading>
+          ) : (
+            <MainTempDisplay>
+              <div>
+                <p>{data.title}</p>
+                <Images src={data.image} alt="weather" />
+              </div>
+              <div>
+                <h2>{Math.round(data.celsius)}°c</h2>
+              </div>
+              <div>{data.name}</div>
+            </MainTempDisplay>
+          )}
           <HumidityAndWind>
             <Humidity>
               <div>
                 <img src={wave} alt="weather" />
               </div>
               <div>
-                <span>{Math.round(data.humidity)}%</span>
+                {isLoading ? (
+                  <ClipLoader
+                    size={10}
+                    color="black"
+                    aria-label="Loading Spinner"
+                  />
+                ) : (
+                  <span>{Math.round(data.humidity)}%</span>
+                )}
                 <span>humidity</span>
               </div>
             </Humidity>
@@ -174,7 +215,15 @@ const Weather = () => {
                 <img src={wind} alt="weather" />
               </div>
               <div>
-                <span>{Math.round(data.speed)}km/h</span>
+                {isLoading ? (
+                  <ClipLoader
+                    size={10}
+                    color="black"
+                    aria-label="Loading Spinner"
+                  />
+                ) : (
+                  <span>{Math.round(data.speed)}km/h</span>
+                )}
                 <span>wind</span>
               </div>
             </Wind>
@@ -193,6 +242,24 @@ const Weather = () => {
 
 export default Weather;
 
+const Nav = styled.nav`
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 1% 0;
+`;
+const AppName = styled.div`
+  font-family: "Righteous", cursive;
+  color: white;
+  text-align: center;
+  font-size: 30px;
+
+  @media (max-width: 786px) {
+    font-size: 20px;
+  }
+`;
 const Main = styled.div`
   width: 100%;
   height: 100vh;
@@ -218,6 +285,7 @@ const SearchBar = styled.div`
 
   div {
     display: flex;
+    box-shadow: 1px 4px 10px 5px rgba(0, 0, 0, 0.3);
     align-items: center;
     padding: 5px;
     background: #fff;
@@ -262,6 +330,12 @@ const Clear = styled.span`
   padding: 5px 5px 3px 5px;
   background-color: rgba(255, 0, 0, 0.662);
   color: white;
+`;
+
+const LoadingContainer = styled.span`
+  display: flex;
+  align-items: center;
+  gap: 10px;
 `;
 const Overlay = styled.div`
   position: absolute;
@@ -385,13 +459,18 @@ const Error = styled.div`
   justify-content: center;
   font-weight: bold;
 `;
+const CenterLoading = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5% 0;
+`;
 const Footer = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
   padding: 20px 0;
   margin-top: 2%;
-  /* color: #474747; */
   justify-content: center;
   @media (max-width: 768px) {
     backdrop-filter: blur(10px);

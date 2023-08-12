@@ -78,11 +78,7 @@ const Weather = () => {
 
   const handleClick = () => {
     if (name === "") {
-      toast.error("City is empty");
-      setError("City is empty");
-      setTimeout(() => {
-        setError("");
-      }, 5000);
+      toast.warning("City is empty");
     }
     if (name !== "") {
       const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=3215f5c33ff488b9bb2cd36919c58aaf&&units=metric`;

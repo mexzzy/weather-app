@@ -181,6 +181,7 @@ const Weather = () => {
                       size={10}
                       color="white"
                       aria-label="Loading Spinner"
+                      
                     />
                     <span>Loading...</span>
                   </LoadingContainer>
@@ -339,6 +340,9 @@ const SearchBar = styled.div`
       cursor: pointer;
       align-items: center;
       color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
 
       justify-content: center;
       i {
@@ -357,7 +361,6 @@ const Clear = styled.span`
 const LoadingContainer = styled.span`
   display: flex;
   align-items: center;
-  gap: 10px;
 `;
 const Overlay = styled.div`
   position: absolute;
@@ -382,6 +385,7 @@ const MainTempDisplay = styled.div`
     gap: 5px;
     align-items: center;
     justify-content: center;
+    
     p {
       background-color: #ffffff33;
       padding: 5px 10px;

@@ -119,17 +119,19 @@ const Weather = () => {
           setIsLoading(false);
         })
         .catch((err) => {
-          if (err.response.status === 404) {
+          if (err.response === 404) {
             toast.error("City not found");
-            setError("City not found");
             setIsLoading(false);
             setTimeout(() => {
               setError("");
             }, 5000);
-          } else {
+          } else if (err.message === "Network Error") {
+            setIsLoading(false);
+            toast.info("Your device is not connected to the internet");
+          } else if (err.response.status === 404) {
             setError("");
             setIsLoading(false);
-            toast.error("An error occurred");
+            toast.error("City not found");
           }
         });
     }

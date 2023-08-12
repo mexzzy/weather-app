@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { AiFillClockCircle } from "react-icons/ai";
+import { BiTime } from "react-icons/bi";
 
 export default function Clock() {
   let time = new Date().toLocaleTimeString();
@@ -15,7 +15,7 @@ export default function Clock() {
     <>
       <TimeContainer>
         <ClockIcon>
-          <AiFillClockCircle />
+          <BiTime />
         </ClockIcon>
         <Time>{currentTime}</Time>
       </TimeContainer>
@@ -26,6 +26,9 @@ const TimeContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  @media (max-width: 786px) {
+    scale: 0.7;
+  }
 `;
 
 const ClockIcon = styled.div`
@@ -39,9 +42,10 @@ const ClockIcon = styled.div`
   z-index: 2;
   height: 50px;
   border-radius: 50%;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
 `;
-const Time = styled.h2`
-  font-family: "Digital" sans-serif;
+const Time = styled.span`
+  font-family: "Digital Numbers", sans-serif;
   background-color: rgba(0, 123, 255, 0.418);
   color: #fff;
   margin: 5px 0;

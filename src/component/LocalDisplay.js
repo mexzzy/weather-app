@@ -1,7 +1,32 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Styled from "styled-components";
 import cloud from "../images-videos/cloud.png";
 
 export default function LocalDisplay() {
+  const [ipData, setIpData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchIpData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get("https://ipinfo.io/json", {
+          headers: {
+            Authorization: "Bearer bed0bd29141b6e",
+          },
+        });
+        setIpData(response.data);
+        setIsLoading(false);
+        console.log("Fetched IP Data:", response.data);
+      } catch (error) {
+        setIsLoading(false);
+        console.error("Error fetching IP data:", error);
+      }
+    };
+
+    fetchIpData();
+  }, []);
   return (
     <div>
       <LocalWrapper>
@@ -10,7 +35,16 @@ export default function LocalDisplay() {
           <MainContainer>
             <RightBox>
               <CityCountry>
-                <div>lagos</div>
+                <div>
+                  {ipData ? (
+                    <>
+                      {ipData.city}</>
+                  ) : (
+                    <>
+                      Location not Found
+                    </>
+                  )}
+                </div>
                 <div></div>
                 <div>ng</div>
               </CityCountry>

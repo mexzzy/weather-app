@@ -23,6 +23,8 @@ import { X } from "react-feather";
 import ClipLoader from "react-spinners/ClipLoader";
 import UserIpLocation from "./IpLocation";
 import LocalDisplay from "./LocalDisplay";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Weather = () => {
   const [data, setData] = useState({
@@ -49,6 +51,19 @@ const Weather = () => {
     "https://vod-progressive.akamaized.net/exp=1691860825~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F2524%2F15%2F387620496%2F1634957389.mp4~hmac=863cc5a2d1acaee9181941cf81f5e5786f20f8bd4d033740329550afcba847bc/vimeo-prod-skyfire-std-us/01/2524/15/387620496/1634957389.mp4?download=1&filename=video+%281080p%29.mp4",
     // "https://vod-progressive.akamaized.net/exp=1691860895~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F3178%2F17%2F440893234%2F1928104199.mp4~hmac=30a7b30adb7d4a44bd50a354e49121e05ee6dd02fcbb9077111e97572ce78c34/vimeo-prod-skyfire-std-us/01/3178/17/440893234/1928104199.mp4?download=1&filename=production_id%3A4933583+%28720p%29.mp4",
     // "https://vod-progressive.akamaized.net/exp=1691861071~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F4386%2F15%2F396931411%2F1689144204.mp4~hmac=f481839f19375b5bb488d42fc41435bfcdb76a08aac1a852c70269dbb453c81c/vimeo-prod-skyfire-std-us/01/4386/15/396931411/1689144204.mp4?download=1&filename=production_id%3A3913495+%281080p%29.mp4",
+    'https://thumbs.gfycat.com/HappygoluckyUnfinishedGordonsetter-mobile.mp4',
+    'https://thumbs.gfycat.com/UnfinishedGratefulFerret-mobile.mp4',
+    'https://thumbs.gfycat.com/UnfinishedGratefulFerret-mobile.mp4',
+    'https://thumbs.gfycat.com/TalkativeCommonBobolink-mobile.mp4',
+    'https://thumbs.gfycat.com/WebbedRipeKitfox-mobile.mp4',
+    'https://thumbs.gfycat.com/WebbedRipeKitfox-mobile.mp4',
+    'https://thumbs.gfycat.com/ScalyAchingKillifish-mobile.mp4',
+    'https://thumbs.gfycat.com/CrispUnluckyCleanerwrasse-mobile.mp4',
+    'https://thumbs.gfycat.com/MixedAdeptBarebirdbat-mobile.mp4',
+    'https://thumbs.gfycat.com/MixedAdeptBarebirdbat-mobile.mp4',
+    'https://thumbs.gfycat.com/PointedMistyHog-mobile.mp4',
+    'https://thumbs.gfycat.com/MixedAdeptBarebirdbat-mobile.mp4',
+    'https://thumbs.gfycat.com/AngryGargantuanCivet-mobile.mp4',
   ];
   useEffect(() => {
     const interval = setInterval(() => {
@@ -77,7 +92,7 @@ const Weather = () => {
 
   const handleClick = () => {
     if (name === "") {
-      setError("City is empty");
+      toast.warning("City is empty");
     }
     if (name !== "") {
       const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=3215f5c33ff488b9bb2cd36919c58aaf&&units=metric`;
@@ -116,13 +131,21 @@ const Weather = () => {
             title: weatherTitle,
           });
           setIsLoading(false);
-          setError("");
         })
         .catch((err) => {
-          if (err.response.status === 404) {
-            setError("City not Found");
-          } else {
+          if (err.response === 404) {
+            toast.error("City not found");
+            setIsLoading(false);
+            setTimeout(() => {
+              setError("");
+            }, 5000);
+          } else if (err.message === "Network Error") {
+            setIsLoading(false);
+            toast.info("Your device is not connected to the internet");
+          } else if (err.response.status === 404) {
             setError("");
+            setIsLoading(false);
+            toast.error("City not found");
           }
         });
     }
@@ -130,6 +153,18 @@ const Weather = () => {
 
   return (
     <>
+      <ToastContainer
+        position="bottom-left"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <Main>
         <Overlay></Overlay>
         <Videos src={backgroundVideo[currentVideoIndex]} autoPlay loop muted />
@@ -240,6 +275,84 @@ const Weather = () => {
         </ContentWrapper>
       </Main>
           {/* <Footer>
+              <div onClick={handleClick}>
+                {isLoading ? (
+                  <LoadingContainer>
+                    <ClipLoader
+                      size={10}
+                      color="white"
+                      aria-label="Loading Spinner"
+                      
+                    />
+                    <span>Loading...</span>
+                  </LoadingContainer>
+                ) : (
+                  <>
+                    <BiSearch />
+                    <span>Search</span>
+                  </>
+                )}
+              </div>
+            </div>
+          </SearchBar>
+
+          {isLoading ? (
+            <CenterLoading>
+              <ClipLoader
+                size={150}
+                color="white"
+                aria-label="Loading Spinner"
+              />
+            </CenterLoading>
+          ) : (
+            <MainTempDisplay>
+              <div>
+                <p>{data.title}</p>
+                <Images src={data.image} alt="weather" />
+              </div>
+              <div>
+                <h2>{Math.round(data.celsius)}°c</h2>
+              </div>
+              <div>{data.name}</div>
+            </MainTempDisplay>
+          )}
+          <HumidityAndWind>
+            <Humidity>
+              <div>
+                <img src={wave} alt="weather" />
+              </div>
+              <div>
+                {isLoading ? (
+                  <ClipLoader
+                    size={10}
+                    color="black"
+                    aria-label="Loading Spinner"
+                  />
+                ) : (
+                  <span>{Math.round(data.humidity)}%</span>
+                )}
+                <span>humidity</span>
+              </div>
+            </Humidity>
+            <Wind>
+              <div>
+                <img src={wind} alt="weather" />
+              </div>
+              <div>
+                {isLoading ? (
+                  <ClipLoader
+                    size={10}
+                    color="black"
+                    aria-label="Loading Spinner"
+                  />
+                ) : (
+                  <span>{Math.round(data.speed)}km/h</span>
+                )}
+                <span>wind</span>
+              </div>
+            </Wind>
+          </HumidityAndWind>
+          <Footer>
             <div>
               <div>MeTech</div>|<div>Weather Update &copy; 2023 copyright</div>
             </div>
@@ -327,6 +440,10 @@ const SearchBar = styled.div`
       cursor: pointer;
       align-items: center;
       color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+
       justify-content: center;
 
     }
@@ -342,7 +459,6 @@ const Clear = styled.span`
 const LoadingContainer = styled.span`
   display: flex;
   align-items: center;
-  gap: 10px;
 `;
 const Overlay = styled.div`
   position: absolute;
@@ -367,6 +483,7 @@ const MainTempDisplay = styled.div`
     gap: 5px;
     align-items: center;
     justify-content: center;
+
     p {
       background-color: #ffffff33;
       padding: 5px 10px;

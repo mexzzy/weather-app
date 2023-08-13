@@ -1,8 +1,9 @@
-@import url('https://fonts.cdnfonts.com/css/digital-numbers');
-*{
+@import url("https://fonts.cdnfonts.com/css/digital-numbers");
+* {
   margin: 0;
   padding: 0;
 }
-body{
-background: #000;
+body {
+  background: #474747;
+  background-image: url("https://www.southernliving.com/thmb/APmZDoQ9oDZHExf6dubVDsvzz14=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-1383026300-c9979ab93b1b4571a3ef3b36ccf50bb4.jpg");
 }

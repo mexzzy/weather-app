@@ -12,7 +12,7 @@ const UserIpLocation = () => {
         });
         // console.log("Fetched IP Data:", response.data);
       } catch (error) {
-        console.error("Error fetching IP data:", error);
+        // console.error("Error fetching IP data:", error);
       }
     };
 

@@ -2,10 +2,17 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Styled from "styled-components";
 import cloud from "../images-videos/cloud.png";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ClipLoader from "react-spinners/ClipLoader";
+
 
 export default function LocalDisplay() {
   const [ipData, setIpData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [weatherData, setWeatherData] = useState({});
+  const [userWeatherData, setUserWeatherData] = useState({});
+  const countryNames = ["England", "Finland", "Russia", "America", "Tokyo", "Nigeria", "Sweden", "United Kingdom", "Los Angeles", "New York", "Phoenix", "San Antonio", "Lagos", "Denver", "Washington"];
 
   useEffect(() => {
     const fetchIpData = async () => {
@@ -18,15 +25,60 @@ export default function LocalDisplay() {
         });
         setIpData(response.data);
         setIsLoading(false);
-        console.log("Fetched IP Data:", response.data);
+        // console.log("Fetched IP Data:", response.data);
+        // toast.success('Good');
       } catch (error) {
         setIsLoading(false);
-        console.error("Error fetching IP data:", error);
+        toast.warning("Can't Find your Location");
       }
     };
 
     fetchIpData();
   }, []);
+
+  useEffect(() => {
+    const fetchWeatherData = async () => {
+      try {
+        const promises = countryNames.map(async (name) => {
+          const response = await axios.get(
+            `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=1daa860efb20e46fb24295ab23b4822c&units=metric`
+          );
+          return { name, data: response.data };
+        });
+
+        const weatherInfo = await Promise.all(promises);
+
+        const newData = {};
+        weatherInfo.forEach(({ name, data }) => {
+          newData[name] = data;
+        });
+
+        setWeatherData(newData);
+        // toast.info('Weather Set');
+      } catch (error) {
+        toast.error('unable to feetch data, due to no internet access')
+      }
+    };
+
+    fetchWeatherData();
+  }, []);
+
+  useEffect(() => {
+    const userLocationWeather = async () => {
+      try {
+        const response = await axios.get(
+          `https://api.openweathermap.org/data/2.5/weather?q=${ipData.city}&appid=1daa860efb20e46fb24295ab23b4822c&units=metric`
+        );
+        setUserWeatherData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    userLocationWeather();
+  }, [ipData]);
+
+
   return (
     <div>
       <LocalWrapper>
@@ -35,78 +87,120 @@ export default function LocalDisplay() {
           <MainContainer>
             <RightBox>
               <CityCountry>
-                <div>
-                  {ipData ? (
-                    <>
-                      {ipData.city}</>
-                  ) : (
-                    <>
-                      Location not Found
-                    </>
-                  )}
-                </div>
-                <div></div>
-                <div>ng</div>
+                {isLoading ? (
+                  <>
+                    <ClipLoader
+                      size={10}
+                      color="white"
+                      aria-label="Loading Spinner"
+                    />
+                  </>
+                ) : (
+                  <>
+                    {ipData ? (
+                      <>
+                        <div>
+                          {ipData.city}
+                        </div>
+                        <div></div>
+                        <div>
+                          {ipData.country}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        Location Not Found
+                      </>
+                    )}
+                  </>
+                )}
               </CityCountry>
-              <TimeZone>africa/lagos</TimeZone>
+              <TimeZone>
+                {isLoading ? (
+                  <>
+                    <ClipLoader
+                      size={10}
+                      color="white"
+                      aria-label="Loading Spinner"
+                    />
+                  </>
+                ) : (
+                  <>
+                    {ipData ? (
+                      <>
+                        {ipData.timezone}
+                      </>
+                    ) : (
+                      <>
+                        not found
+                      </>
+                    )}
+                  </>
+                )}
+              </TimeZone>
             </RightBox>
             <Rule></Rule>
             <LeftBox>
               <img src={cloud} alt="weather-icon" />
-              <div>25°c</div>
+              {isLoading ? (
+                <>
+                  <ClipLoader
+                    size={10}
+                    color="white"
+                    aria-label="Loading Spinner"
+                  />
+                </>
+              ) : (
+                <>
+                  {userWeatherData.main ? (
+                    <>
+                      <div>
+                        {Math.round(userWeatherData.main.temp)}°c</div>
+                    </>
+                  ) : (
+                    <>
+                      <div>0°c</div>
+                    </>
+                  )}
+                </>
+              )}
+
             </LeftBox>
           </MainContainer>
         </YourLocalContainer>
         <ScrollContainer>
-          <YourLocalContainerList>
-            <span>england</span>
-            <div>
-              <img src={cloud} alt="weather-icon" />
-              <span>25°c</span>
-            </div>
-          </YourLocalContainerList>
-          <YourLocalContainerList>
-            <span>england</span>
-            <div>
-              <img src={cloud} alt="weather-icon" />
-              <span>25°c</span>
-            </div>
-          </YourLocalContainerList>
-          <YourLocalContainerList>
-            <span>england</span>
-            <div>
-              <img src={cloud} alt="weather-icon" />
-              <span>25°c</span>
-            </div>
-          </YourLocalContainerList>
-          <YourLocalContainerList>
-            <span>england</span>
-            <div>
-              <img src={cloud} alt="weather-icon" />
-              <span>25°c</span>
-            </div>
-          </YourLocalContainerList>
-          <YourLocalContainerList>
-            <span>england</span>
-            <div>
-              <img src={cloud} alt="weather-icon" />
-              <span>25°c</span>
-            </div>
-          </YourLocalContainerList>
-          <YourLocalContainerList>
-            <span>england</span>
-            <div>
-              <img src={cloud} alt="weather-icon" />
-              <span>25°c</span>
-            </div>
-          </YourLocalContainerList>
-          <YourLocalContainerList>
-            <span>england</span>
-            <div>
-              <img src={cloud} alt="weather-icon" />
-              <span>25°c</span>
-            </div>
-          </YourLocalContainerList>
+          <>
+            {isLoading ? (
+              <>
+                <ClipLoader
+                  size={40}
+                  color="white"
+                  aria-label="Loading Spinner"
+                />
+                <p style={{ color: 'white' }}>Loading weather information...</p>
+              </>
+            ) : (
+              <>
+                {Object.keys(weatherData).length === countryNames.length ? (
+                  countryNames.map((name) => (
+                    <YourLocalContainerList key={name}>
+                      <span>{name}</span>
+                      <div>
+                        <img src={cloud} alt="weather-icon" />
+                        <span>
+                          {Math.round(weatherData[name].main.temp)}°C</span>
+                      </div>
+                    </YourLocalContainerList>
+                  ))
+                ) : (
+                  <>
+                    <p style={{ color: 'white' }}>No Data...</p>
+                  </>
+
+                )}
+              </>
+            )}
+          </>
         </ScrollContainer>
       </LocalWrapper>
     </div>
@@ -193,7 +287,7 @@ const Rule = Styled.div`
 const LeftBox = Styled.div`
     display: flex;
     align-items: center;
-    flex-direction: column;
+    flex-direction: row;
     img{
         width: 50px;
         object-fit: cover;
@@ -214,6 +308,12 @@ const ScrollContainer = Styled.div`
     align-items: center;
     justify-content: center;
     padding-top: 40px;
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
 `;
 const YourLocalContainerList = Styled.div`
     backdrop-filter: blur(10px);

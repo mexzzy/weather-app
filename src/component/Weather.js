@@ -96,7 +96,7 @@ const Weather = () => {
       toast.warning("City is empty");
     }
     if (name !== "") {
-      const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=3215f5c33ff488b9bb2cd36919c58aaf&&units=metric`;
+      const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=1daa860efb20e46fb24295ab23b4822c&units=metric`;
       setIsLoading(true);
       axios
         .get(apiUrl)
@@ -358,7 +358,7 @@ const Weather = () => {
               <div>MeTech</div>|<div>Weather Update &copy; 2023 copyright</div>
             </div>
           </Footer> */}
-      <UserIpLocation />
+      {/* <UserIpLocation /> */}
     </>
   );
 };

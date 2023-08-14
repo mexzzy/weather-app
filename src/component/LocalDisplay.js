@@ -74,7 +74,6 @@ export default function LocalDisplay() {
         console.error(error);
       }
     };
-
     userLocationWeather();
   }, [ipData]);
 

@@ -22,6 +22,7 @@ import { X } from "react-feather";
 // loader animation
 import ClipLoader from "react-spinners/ClipLoader";
 import UserIpLocation from "./IpLocation";
+import LocalDisplay from "./LocalDisplay";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -50,19 +51,20 @@ const Weather = () => {
     // "https://vod-progressive.akamaized.net/exp=1691860825~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F2524%2F15%2F387620496%2F1634957389.mp4~hmac=863cc5a2d1acaee9181941cf81f5e5786f20f8bd4d033740329550afcba847bc/vimeo-prod-skyfire-std-us/01/2524/15/387620496/1634957389.mp4?download=1&filename=video+%281080p%29.mp4",
     // "https://vod-progressive.akamaized.net/exp=1691860895~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F3178%2F17%2F440893234%2F1928104199.mp4~hmac=30a7b30adb7d4a44bd50a354e49121e05ee6dd02fcbb9077111e97572ce78c34/vimeo-prod-skyfire-std-us/01/3178/17/440893234/1928104199.mp4?download=1&filename=production_id%3A4933583+%28720p%29.mp4",
     // "https://vod-progressive.akamaized.net/exp=1691861071~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F4386%2F15%2F396931411%2F1689144204.mp4~hmac=f481839f19375b5bb488d42fc41435bfcdb76a08aac1a852c70269dbb453c81c/vimeo-prod-skyfire-std-us/01/4386/15/396931411/1689144204.mp4?download=1&filename=production_id%3A3913495+%281080p%29.mp4",
-    'https://thumbs.gfycat.com/HappygoluckyUnfinishedGordonsetter-mobile.mp4',
-    'https://thumbs.gfycat.com/UnfinishedGratefulFerret-mobile.mp4',
-    'https://thumbs.gfycat.com/UnfinishedGratefulFerret-mobile.mp4',
-    'https://thumbs.gfycat.com/TalkativeCommonBobolink-mobile.mp4',
-    'https://thumbs.gfycat.com/WebbedRipeKitfox-mobile.mp4',
-    'https://thumbs.gfycat.com/WebbedRipeKitfox-mobile.mp4',
-    'https://thumbs.gfycat.com/ScalyAchingKillifish-mobile.mp4',
-    'https://thumbs.gfycat.com/CrispUnluckyCleanerwrasse-mobile.mp4',
-    'https://thumbs.gfycat.com/MixedAdeptBarebirdbat-mobile.mp4',
-    'https://thumbs.gfycat.com/MixedAdeptBarebirdbat-mobile.mp4',
-    'https://thumbs.gfycat.com/PointedMistyHog-mobile.mp4',
-    'https://thumbs.gfycat.com/MixedAdeptBarebirdbat-mobile.mp4',
-    'https://thumbs.gfycat.com/AngryGargantuanCivet-mobile.mp4',
+    
+    // 'https://thumbs.gfycat.com/HappygoluckyUnfinishedGordonsetter-mobile.mp4',
+    // 'https://thumbs.gfycat.com/UnfinishedGratefulFerret-mobile.mp4',
+    // 'https://thumbs.gfycat.com/UnfinishedGratefulFerret-mobile.mp4',
+    // 'https://thumbs.gfycat.com/TalkativeCommonBobolink-mobile.mp4',
+    // 'https://thumbs.gfycat.com/WebbedRipeKitfox-mobile.mp4',
+    // 'https://thumbs.gfycat.com/WebbedRipeKitfox-mobile.mp4',
+    // 'https://thumbs.gfycat.com/ScalyAchingKillifish-mobile.mp4',
+    // 'https://thumbs.gfycat.com/CrispUnluckyCleanerwrasse-mobile.mp4',
+    // 'https://thumbs.gfycat.com/MixedAdeptBarebirdbat-mobile.mp4',
+    // 'https://thumbs.gfycat.com/MixedAdeptBarebirdbat-mobile.mp4',
+    // 'https://thumbs.gfycat.com/PointedMistyHog-mobile.mp4',
+    // 'https://thumbs.gfycat.com/MixedAdeptBarebirdbat-mobile.mp4',
+    // 'https://thumbs.gfycat.com/AngryGargantuanCivet-mobile.mp4',
   ];
   useEffect(() => {
     const interval = setInterval(() => {
@@ -94,7 +96,7 @@ const Weather = () => {
       toast.warning("City is empty");
     }
     if (name !== "") {
-      const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=3215f5c33ff488b9bb2cd36919c58aaf&&units=metric`;
+      const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=1daa860efb20e46fb24295ab23b4822c&units=metric`;
       setIsLoading(true);
       axios
         .get(apiUrl)
@@ -117,8 +119,8 @@ const Weather = () => {
             imagePath = mist;
             weatherTitle = "Mist";
           } else {
-            imagePath = sunCloud;
-            weatherTitle = "clear";
+            imagePath = cloud;
+            weatherTitle = "mostly cloudy";
           }
           setData({
             ...data,
@@ -172,21 +174,108 @@ const Weather = () => {
             <AppName>Weather Update</AppName>
             <Clock />
           </Nav>
-
-          <SearchBar>
-            <div>
-              <input
-                type="text"
-                placeholder="Enter Country, State, City"
-                value={inputValue}
-                onChange={inputChange}
-                onKeyPress={handleOnKeyPress}
-              />
-              {inputValue && (
-                <Clear onClick={clearInputHandle}>
-                  <X size="18" />
-                </Clear>
+          {/*  */}
+          <FlexContainer>
+            <WeatherSearchEngineContainer>
+              <SearchBar>
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Enter Country, State, City"
+                    value={inputValue}
+                    onChange={inputChange}
+                    onKeyPress={handleOnKeyPress}
+                  />
+                  {inputValue && (
+                    <Clear onClick={clearInputHandle}>
+                      <X size="18" />
+                    </Clear>
+                  )}
+                  <div onClick={handleClick}>
+                    {isLoading ? (
+                      <LoadingContainer>
+                        <ClipLoader
+                          size={10}
+                          color="white"
+                          aria-label="Loading Spinner"
+                        />
+                        <span>Loading...</span>
+                      </LoadingContainer>
+                    ) : (
+                      <>
+                        <BiSearch />
+                        <span>Search</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </SearchBar>
+              <Error>{error}</Error>
+              {isLoading ? (
+                <CenterLoading>
+                  <ClipLoader
+                    size={150}
+                    color="white"
+                    aria-label="Loading Spinner"
+                  />
+                </CenterLoading>
+              ) : (
+                <MainTempDisplay>
+                  <div>
+                    <p>{data.title}</p>
+                    <Images src={data.image} alt="weather" />
+                  </div>
+                  <div>
+                    <h2>{Math.round(data.celsius)}°c</h2>
+                  </div>
+                  <div>{data.name}</div>
+                </MainTempDisplay>
               )}
+              <HumidityAndWind>
+                <Humidity>
+                  <div>
+                    <img src={wave} alt="weather" />
+                  </div>
+                  <div>
+                    {isLoading ? (
+                      <ClipLoader
+                        size={10}
+                        color="black"
+                        aria-label="Loading Spinner"
+                      />
+                    ) : (
+                      <span>{Math.round(data.humidity)}%</span>
+                    )}
+                    <span>humidity</span>
+                  </div>
+                </Humidity>
+                <Wind>
+                  <div>
+                    <img src={wind} alt="weather" />
+                  </div>
+                  <div>
+                    {isLoading ? (
+                      <ClipLoader
+                        size={10}
+                        color="black"
+                        aria-label="Loading Spinner"
+                      />
+                    ) : (
+                      <span>{Math.round(data.speed)}km/h</span>
+                    )}
+                    <span>wind</span>
+                  </div>
+                </Wind>
+              </HumidityAndWind>
+            </WeatherSearchEngineContainer>
+            <PrimaryLocalDisplayContainer>
+              <LocalDisplay />
+            </PrimaryLocalDisplayContainer>
+          </FlexContainer>
+          {/*  */}
+        </ContentWrapper>
+      </Main>
+          {/* <Footer>
               <div onClick={handleClick}>
                 {isLoading ? (
                   <LoadingContainer>
@@ -268,10 +357,8 @@ const Weather = () => {
             <div>
               <div>MeTech</div>|<div>Weather Update &copy; 2023 copyright</div>
             </div>
-          </Footer>
-        </ContentWrapper>
-      </Main>
-      <UserIpLocation />
+          </Footer> */}
+      {/* <UserIpLocation /> */}
     </>
   );
 };
@@ -285,6 +372,7 @@ const Nav = styled.nav`
   background: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
   padding: 1% 0;
+  width: 100%;
 `;
 const AppName = styled.div`
   font-family: "Righteous", cursive;
@@ -294,6 +382,7 @@ const AppName = styled.div`
 
   @media (max-width: 786px) {
     font-size: 20px;
+    padding-left: 12px;
   }
 `;
 const Main = styled.div`
@@ -314,7 +403,6 @@ const SearchBar = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 2%;
   @media (max-width: 768px) {
     margin-top: 10%;
   }
@@ -345,7 +433,7 @@ const SearchBar = styled.div`
     }
 
     div {
-      background: rgba(0, 123, 255, 0.881);
+      background:  rgba(18, 12, 57, 0.998);
       padding: 10px;
       width: fit-content;
       border-radius: 10px;
@@ -358,9 +446,7 @@ const SearchBar = styled.div`
       justify-content: space-around;
 
       justify-content: center;
-      i {
-        color: #fff;
-      }
+
     }
   }
 `;
@@ -439,7 +525,7 @@ const Humidity = styled.div`
   background: #fff;
   border-radius: 10px;
   width: fit-content;
-  border: 2px solid red;
+  border: 2px solid  rgba(18, 12, 57);
   div:nth-child(1) {
     img {
       width: 50px;
@@ -466,7 +552,7 @@ const Wind = styled.div`
   align-items: center;
   gap: 10px;
   padding: 10px;
-  border: 2px solid rgba(0, 123, 255, 0.881);
+  border: 2px solid  rgba(18, 12, 57);
   background: #fff;
   border-radius: 10px;
   width: fit-content;
@@ -504,21 +590,47 @@ const CenterLoading = styled.div`
   justify-content: center;
   margin: 5% 0;
 `;
-const Footer = styled.div`
+
+const FlexContainer = styled.div`
   width: 100%;
   display: flex;
-  align-items: center;
-  padding: 20px 0;
-  margin-top: 2%;
+  align-items: flex-start;
   justify-content: center;
+  margin-top: 2%;
+  overflow: hidden;
+
   @media (max-width: 768px) {
-    backdrop-filter: blur(10px);
-    margin-top: 10%;
-  }
-  div {
-    display: flex;
-    align-items: center;
     gap: 10px;
-    color: #fff;
+    flex-direction: column;
   }
 `;
+const WeatherSearchEngineContainer = styled.div`
+  width: 60%;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+const PrimaryLocalDisplayContainer = styled.div`
+  width: 40%;
+  margin: 10px;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+
+// const Footer = styled.div`
+//   width: 100%;
+//   display: flex;
+//   align-items: center;
+//   padding: 15px 0;
+//   justify-content: center;
+//   @media (max-width: 768px) {
+//     font-size: 14px;
+//   }
+//   div {
+//     display: flex;
+//     align-items: center;
+//     gap: 10px;
+//     color: #fff;
+//   }
+// `;

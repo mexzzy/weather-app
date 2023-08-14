@@ -10,9 +10,9 @@ const UserIpLocation = () => {
             Authorization: "Bearer bed0bd29141b6e",
           },
         });
-        console.log("Fetched IP Data:", response.data);
+        // console.log("Fetched IP Data:", response.data);
       } catch (error) {
-        console.error("Error fetching IP data:", error);
+        // console.error("Error fetching IP data:", error);
       }
     };
 

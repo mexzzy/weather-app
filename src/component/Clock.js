@@ -42,11 +42,11 @@ const ClockIcon = styled.div`
   z-index: 2;
   height: 50px;
   border-radius: 50%;
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
+  box-shadow: 1px 1px 8 rgba(0, 0, 0, 0.8);
 `;
 const Time = styled.span`
   font-family: "Digital Numbers", sans-serif;
-  background-color: rgba(0, 123, 255, 0.418);
+  background-color: rgba(18, 12, 57, 0.704);
   color: #fff;
   margin: 5px 0;
   padding: 0.2em;
@@ -55,4 +55,9 @@ const Time = styled.span`
   text-align: center;
   width: fit-content;
   margin-left: -20px;
+  padding:  8px 8px 8px 25px; 
+
+  @media (max-width: 786px) {
+    padding:  10px 10px 10px 25px; 
+  }
 `;

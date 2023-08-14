@@ -12,7 +12,7 @@ export default function LocalDisplay() {
   const [isLoading, setIsLoading] = useState(false);
   const [weatherData, setWeatherData] = useState({});
   const [userWeatherData, setUserWeatherData] = useState({});
-  const countryNames = ["England", "Finland", "Russia", "America", "Tokyo", "Nigeria", "Sweden", "United Kingdom", "Los Angeles", "New York", "Phoenix", "San Antonio", "Lagos", "Denver", "Washington"];
+  const countryNames = ["Finland", "Russia", "America", "Tokyo", "Nigeria", "Sweden", "United Kingdom", "Los Angeles", "New York", "Phoenix", "San Antonio", "Lagos", "Denver", "Washington", "Antarctica"];
 
   useEffect(() => {
     const fetchIpData = async () => {

@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 // axios
 import axios from "axios";
 // styled component
 import styled from "styled-components";
-// video background
-
 //
 import wind from "../images-videos/wind.png";
 import wave from "../images-videos/wave.png";
@@ -21,7 +19,6 @@ import { BiSearch } from "react-icons/bi";
 import { X } from "react-feather";
 // loader animation
 import ClipLoader from "react-spinners/ClipLoader";
-import UserIpLocation from "./IpLocation";
 import LocalDisplay from "./LocalDisplay";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -38,44 +35,7 @@ const Weather = () => {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [inputValue, setInputValue] = useState("");
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-
-  const backgroundVideo = [
-    // "https://vod-progressive.akamaized.net/exp=1691859234~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F2945%2F12%2F314728144%2F1214767347.mp4~hmac=5121e7406498dd5e6c6171be71fa36c3bec97f23f865272e554f76772d2727ea/vimeo-prod-skyfire-std-us/01/2945/12/314728144/1214767347.mp4?download=1&filename=pexels_videos_1860175+%282160p%29.mp4",
-    // "https://vod-progressive.akamaized.net/exp=1691859460~acl=%2Fvimeo-transcode-storage-prod-us-central1-h264-2160p%2F01%2F3641%2F14%2F368208181%2F1523391695.mp4~hmac=7bce166e35cb669734fd48be1a7130098fbb6f40f15fa1082eb740a08c1e4fa7/vimeo-transcode-storage-prod-us-central1-h264-2160p/01/3641/14/368208181/1523391695.mp4?download=1&filename=video+%282160p%29.mp4",
-    // "https://vod-progressive.akamaized.net/exp=1691859551~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F1132%2F8%2F205660426%2F700244882.mp4~hmac=6e71c86105fdb25630a60487dc45ed75d4479dab9e590a5b677bdc5831ecc6c0/vimeo-prod-skyfire-std-us/01/1132/8/205660426/700244882.mp4?download=1&filename=woman_waiting_for_a_taxi+%281080p%29.mp4",
-    // "https://vod-progressive.akamaized.net/exp=1691859601~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F1041%2F12%2F305209130%2F1170417074.mp4~hmac=73f764d8ef49a91a0ca1618544d6205a1d73813f10baf532291b17097de11530/vimeo-prod-skyfire-std-us/01/1041/12/305209130/1170417074.mp4?download=1&filename=pexels_videos_1672733+%281080p%29.mp4",
-    // "https://vod-progressive.akamaized.net/exp=1691860682~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F2148%2F8%2F210741446%2F722728905.mp4~hmac=fe965cb1845e83c052955d4fbf977ad534c5137ef43fd4188769fd8e3ca2ad6b/vimeo-prod-skyfire-std-us/01/2148/8/210741446/722728905.mp4?download=1&filename=pexels_videos_2614+%281080p%29.mp4",
-    // "https://vod-progressive.akamaized.net/exp=1691860748~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F2276%2F17%2F436382563%2F1902919897.mp4~hmac=03934e9345be9101527b062725bbce7aacd7282f6f7de958860ff5f905c556d6/vimeo-prod-skyfire-std-us/01/2276/17/436382563/1902919897.mp4?download=1&filename=production_id%3A4828773+%281080p%29.mp4",
-    // "https://vod-progressive.akamaized.net/exp=1691860825~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F2524%2F15%2F387620496%2F1634957389.mp4~hmac=863cc5a2d1acaee9181941cf81f5e5786f20f8bd4d033740329550afcba847bc/vimeo-prod-skyfire-std-us/01/2524/15/387620496/1634957389.mp4?download=1&filename=video+%281080p%29.mp4",
-    // "https://vod-progressive.akamaized.net/exp=1691860895~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F3178%2F17%2F440893234%2F1928104199.mp4~hmac=30a7b30adb7d4a44bd50a354e49121e05ee6dd02fcbb9077111e97572ce78c34/vimeo-prod-skyfire-std-us/01/3178/17/440893234/1928104199.mp4?download=1&filename=production_id%3A4933583+%28720p%29.mp4",
-    // "https://vod-progressive.akamaized.net/exp=1691861071~acl=%2Fvimeo-prod-skyfire-std-us%2F01%2F4386%2F15%2F396931411%2F1689144204.mp4~hmac=f481839f19375b5bb488d42fc41435bfcdb76a08aac1a852c70269dbb453c81c/vimeo-prod-skyfire-std-us/01/4386/15/396931411/1689144204.mp4?download=1&filename=production_id%3A3913495+%281080p%29.mp4",
-    
-    // 'https://thumbs.gfycat.com/HappygoluckyUnfinishedGordonsetter-mobile.mp4',
-    // 'https://thumbs.gfycat.com/UnfinishedGratefulFerret-mobile.mp4',
-    // 'https://thumbs.gfycat.com/UnfinishedGratefulFerret-mobile.mp4',
-    // 'https://thumbs.gfycat.com/TalkativeCommonBobolink-mobile.mp4',
-    // 'https://thumbs.gfycat.com/WebbedRipeKitfox-mobile.mp4',
-    // 'https://thumbs.gfycat.com/WebbedRipeKitfox-mobile.mp4',
-    // 'https://thumbs.gfycat.com/ScalyAchingKillifish-mobile.mp4',
-    // 'https://thumbs.gfycat.com/CrispUnluckyCleanerwrasse-mobile.mp4',
-    // 'https://thumbs.gfycat.com/MixedAdeptBarebirdbat-mobile.mp4',
-    // 'https://thumbs.gfycat.com/MixedAdeptBarebirdbat-mobile.mp4',
-    // 'https://thumbs.gfycat.com/PointedMistyHog-mobile.mp4',
-    // 'https://thumbs.gfycat.com/MixedAdeptBarebirdbat-mobile.mp4',
-    // 'https://thumbs.gfycat.com/AngryGargantuanCivet-mobile.mp4',
-  ];
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentVideoIndex(
-        (prevIndex) => (prevIndex + 1) % backgroundVideo.length
-      );
-    }, 10000);
-    return () => {
-      clearInterval(interval);
-    };
-  }, [backgroundVideo.length]);
 
   const clearInputHandle = () => {
     setInputValue("");
@@ -166,9 +126,7 @@ const Weather = () => {
         pauseOnHover
         theme="dark"
       />
-      <Main>
-        <Overlay></Overlay>
-        <Videos src={backgroundVideo[currentVideoIndex]} autoPlay loop muted />
+      <div className="main">
         <ContentWrapper>
           <Nav>
             <AppName>Weather Update</AppName>
@@ -274,91 +232,7 @@ const Weather = () => {
           </FlexContainer>
           {/*  */}
         </ContentWrapper>
-      </Main>
-          {/* <Footer>
-              <div onClick={handleClick}>
-                {isLoading ? (
-                  <LoadingContainer>
-                    <ClipLoader
-                      size={10}
-                      color="white"
-                      aria-label="Loading Spinner"
-                      
-                    />
-                    <span>Loading...</span>
-                  </LoadingContainer>
-                ) : (
-                  <>
-                    <BiSearch />
-                    <span>Search</span>
-                  </>
-                )}
-              </div>
-            </div>
-          </SearchBar>
-
-          {isLoading ? (
-            <CenterLoading>
-              <ClipLoader
-                size={150}
-                color="white"
-                aria-label="Loading Spinner"
-              />
-            </CenterLoading>
-          ) : (
-            <MainTempDisplay>
-              <div>
-                <p>{data.title}</p>
-                <Images src={data.image} alt="weather" />
-              </div>
-              <div>
-                <h2>{Math.round(data.celsius)}°c</h2>
-              </div>
-              <div>{data.name}</div>
-            </MainTempDisplay>
-          )}
-          <HumidityAndWind>
-            <Humidity>
-              <div>
-                <img src={wave} alt="weather" />
-              </div>
-              <div>
-                {isLoading ? (
-                  <ClipLoader
-                    size={10}
-                    color="black"
-                    aria-label="Loading Spinner"
-                  />
-                ) : (
-                  <span>{Math.round(data.humidity)}%</span>
-                )}
-                <span>humidity</span>
-              </div>
-            </Humidity>
-            <Wind>
-              <div>
-                <img src={wind} alt="weather" />
-              </div>
-              <div>
-                {isLoading ? (
-                  <ClipLoader
-                    size={10}
-                    color="black"
-                    aria-label="Loading Spinner"
-                  />
-                ) : (
-                  <span>{Math.round(data.speed)}km/h</span>
-                )}
-                <span>wind</span>
-              </div>
-            </Wind>
-          </HumidityAndWind>
-          <Footer>
-            <div>
-              <div>MeTech</div>|<div>Weather Update &copy; 2023 copyright</div>
-            </div>
-          </Footer> */}
-      {/* <UserIpLocation /> */}
+      </div>
     </>
   );
 };
@@ -385,19 +259,9 @@ const AppName = styled.div`
     padding-left: 12px;
   }
 `;
-const Main = styled.div`
-  width: 100%;
-  height: 100vh;
-`;
-const Videos = styled.video`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-`;
 const ContentWrapper = styled.div`
   width: 100%;
-  position: absolute;
-  top: 0;
+  
 `;
 const SearchBar = styled.div`
   display: flex;
@@ -433,7 +297,7 @@ const SearchBar = styled.div`
     }
 
     div {
-      background:  rgba(18, 12, 57, 0.998);
+      background: rgba(18, 12, 57, 0.998);
       padding: 10px;
       width: fit-content;
       border-radius: 10px;
@@ -446,7 +310,6 @@ const SearchBar = styled.div`
       justify-content: space-around;
 
       justify-content: center;
-
     }
   }
 `;
@@ -461,13 +324,6 @@ const LoadingContainer = styled.span`
   display: flex;
   align-items: center;
 `;
-const Overlay = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-`;
-
 const MainTempDisplay = styled.div`
   display: flex;
   align-items: center;
@@ -525,7 +381,7 @@ const Humidity = styled.div`
   background: #fff;
   border-radius: 10px;
   width: fit-content;
-  border: 2px solid  rgba(18, 12, 57);
+  border: 2px solid rgba(18, 12, 57);
   div:nth-child(1) {
     img {
       width: 50px;
@@ -552,7 +408,7 @@ const Wind = styled.div`
   align-items: center;
   gap: 10px;
   padding: 10px;
-  border: 2px solid  rgba(18, 12, 57);
+  border: 2px solid rgba(18, 12, 57);
   background: #fff;
   border-radius: 10px;
   width: fit-content;
@@ -617,20 +473,3 @@ const PrimaryLocalDisplayContainer = styled.div`
     width: 100%;
   }
 `;
-
-// const Footer = styled.div`
-//   width: 100%;
-//   display: flex;
-//   align-items: center;
-//   padding: 15px 0;
-//   justify-content: center;
-//   @media (max-width: 768px) {
-//     font-size: 14px;
-//   }
-//   div {
-//     display: flex;
-//     align-items: center;
-//     gap: 10px;
-//     color: #fff;
-//   }
-// `;

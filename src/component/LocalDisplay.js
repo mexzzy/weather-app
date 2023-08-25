@@ -2,17 +2,34 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Styled from "styled-components";
 import cloud from "../images-videos/cloud.png";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ClipLoader from "react-spinners/ClipLoader";
-
+import Footer from "./Footer"
 
 export default function LocalDisplay() {
   const [ipData, setIpData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [weatherData, setWeatherData] = useState({});
   const [userWeatherData, setUserWeatherData] = useState({});
-  const countryNames = ["Finland", "Russia", "America", "Tokyo", "Nigeria", "Sweden", "United Kingdom", "Los Angeles", "New York", "Phoenix", "San Antonio", "Lagos", "Denver", "Washington", "Antarctica"];
+  const countryNames = [
+    "Finland",
+    "Russia",
+    "America",
+    "Tokyo",
+    "Nigeria",
+    "Sweden",
+    "United Kingdom",
+    "Los Angeles",
+    "New York",
+    "Phoenix",
+    "San Antonio",
+    "Lagos",
+    "Denver",
+    "Washington",
+    "Antarctica",
+    "France",
+  ];
 
   useEffect(() => {
     const fetchIpData = async () => {
@@ -56,7 +73,7 @@ export default function LocalDisplay() {
         setWeatherData(newData);
         // toast.info('Weather Set');
       } catch (error) {
-        toast.error('unable to feetch data, due to no internet access')
+        toast.error("unable to fetch data, connect to the internet");
       }
     };
 
@@ -76,7 +93,6 @@ export default function LocalDisplay() {
     };
     userLocationWeather();
   }, [ipData]);
-
 
   return (
     <div>
@@ -98,18 +114,12 @@ export default function LocalDisplay() {
                   <>
                     {ipData ? (
                       <>
-                        <div>
-                          {ipData.city}
-                        </div>
+                        <div>{ipData.city}</div>
                         <div></div>
-                        <div>
-                          {ipData.country}
-                        </div>
+                        <div>{ipData.country}</div>
                       </>
                     ) : (
-                      <>
-                        Location Not Found
-                      </>
+                      <>Location Not Found</>
                     )}
                   </>
                 )}
@@ -124,17 +134,7 @@ export default function LocalDisplay() {
                     />
                   </>
                 ) : (
-                  <>
-                    {ipData ? (
-                      <>
-                        {ipData.timezone}
-                      </>
-                    ) : (
-                      <>
-                        not found
-                      </>
-                    )}
-                  </>
+                  <>{ipData ? <>{ipData.timezone}</> : <>not found</>}</>
                 )}
               </TimeZone>
             </RightBox>
@@ -153,8 +153,7 @@ export default function LocalDisplay() {
                 <>
                   {userWeatherData.main ? (
                     <>
-                      <div>
-                        {Math.round(userWeatherData.main.temp)}°c</div>
+                      <div>{Math.round(userWeatherData.main.temp)}°c</div>
                     </>
                   ) : (
                     <>
@@ -163,7 +162,6 @@ export default function LocalDisplay() {
                   )}
                 </>
               )}
-
             </LeftBox>
           </MainContainer>
         </YourLocalContainer>
@@ -176,7 +174,7 @@ export default function LocalDisplay() {
                   color="white"
                   aria-label="Loading Spinner"
                 />
-                <p style={{ color: 'white' }}>Loading weather information...</p>
+                <p style={{ color: "white" }}>Loading weather information...</p>
               </>
             ) : (
               <>
@@ -186,22 +184,21 @@ export default function LocalDisplay() {
                       <span>{name}</span>
                       <div>
                         <img src={cloud} alt="weather-icon" />
-                        <span>
-                          {Math.round(weatherData[name].main.temp)}°C</span>
+                        <span>{Math.round(weatherData[name].main.temp)}°C</span>
                       </div>
                     </YourLocalContainerList>
                   ))
                 ) : (
                   <>
-                    <p style={{ color: 'white' }}>No Data...</p>
+                    <p className="noData" style={{ color: "rgb(250, 100, 102)" }}>No Data...</p>
                   </>
-
                 )}
               </>
             )}
           </>
         </ScrollContainer>
       </LocalWrapper>
+      <Footer />
     </div>
   );
 }

@@ -4,6 +4,18 @@
   padding: 0;
 }
 body {
-  background: #474747;
-  background-image: url("https://www.southernliving.com/thmb/APmZDoQ9oDZHExf6dubVDsvzz14=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-1383026300-c9979ab93b1b4571a3ef3b36ccf50bb4.jpg");
+  background: #000000;
+}
+
+.main{
+  width: 100%;
+  height: 100vh;
+  background-image: linear-gradient(45deg, rgb(11, 34, 44), rgb(25, 25, 49),rgb(12, 12, 23));
+}
+.noData{
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.1);
+  animation: rotate 2s linear infinite;
+  border-radius: 10px;
+  border: 1px dashed rgba(255, 0, 0, 0.509);
 }

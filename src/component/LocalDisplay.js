@@ -28,7 +28,6 @@ export default function LocalDisplay() {
     "Denver",
     "Washington",
     "Antarctica",
-    "France",
   ];
 
   useEffect(() => {
